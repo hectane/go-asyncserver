@@ -12,8 +12,10 @@ Although Go provides `http.ListenAndServe()`, this method blocks indefinitely. W
 
 The following example demonstrates the creation of a simple asynchronous HTTP server:
 
+    import "github.com/hectane/go-asyncserver"
+
     // "0" instructs the OS to select a free port
-    s := async.New(":0")
+    s := server.New(":0")
     
     // The server doesn't actually begin accepting connections
     // until the Start() method is called
