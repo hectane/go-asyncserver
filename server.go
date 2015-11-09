@@ -1,6 +1,7 @@
 package async
 
 import (
+	"crypto/tls"
 	"net"
 	"net/http"
 )
@@ -25,6 +26,9 @@ func (s *Server) Start() error {
 	l, err := net.Listen("tcp", s.Addr)
 	if err != nil {
 		return err
+	}
+	if s.TLSConfig != nil {
+		l = tls.NewListener(l, s.TLSConfig)
 	}
 	s.listener = l
 	go func() {
