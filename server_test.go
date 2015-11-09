@@ -6,7 +6,7 @@ import (
 )
 
 func TestServer(t *testing.T) {
-	s := New(":0")
+	s := New("127.0.0.1:0")
 	if err := s.Start(); err != nil {
 		t.Fatal(err)
 	}
