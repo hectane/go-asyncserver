@@ -15,10 +15,12 @@ type Server struct {
 
 // Create a new server instance. Note that Start() must be called before the
 // server will begin accepting new connections.
-func New() *Server {
-	return &Server{
+func New(addr string) *Server {
+	s := &Server{
 		stopped: make(chan bool),
 	}
+	s.Addr = addr
+	return s
 }
 
 // Start the server.
@@ -27,6 +29,7 @@ func (s *Server) Start() error {
 	if err != nil {
 		return err
 	}
+	s.Addr = l.Addr().String()
 	if s.TLSConfig != nil {
 		l = tls.NewListener(l, s.TLSConfig)
 	}
