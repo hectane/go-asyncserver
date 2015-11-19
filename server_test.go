@@ -6,15 +6,15 @@ import (
 )
 
 func TestServer(t *testing.T) {
-	s := New("127.0.0.1:0")
-	if err := s.Start(); err != nil {
+	a := New("127.0.0.1:0")
+	if err := a.Start(); err != nil {
 		t.Fatal(err)
 	}
-	url := "http://" + s.Addr
+	url := "http://" + a.Addr
 	if _, err := http.Get(url); err != nil {
 		t.Fatal(err)
 	}
-	s.Stop()
+	a.Stop()
 	if _, err := http.Get(url); err == nil {
 		t.Fatal("error expected")
 	}

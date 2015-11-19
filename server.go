@@ -7,7 +7,7 @@ import (
 )
 
 // Asynchronous HTTP server that can be started and stopped asynchronously.
-type Server struct {
+type AsyncServer struct {
 	http.Server
 	listener net.Listener
 	stopped  chan bool
@@ -15,34 +15,34 @@ type Server struct {
 
 // Create a new server instance. Note that Start() must be called before the
 // server will begin accepting new connections.
-func New(addr string) *Server {
-	s := &Server{
+func New(addr string) *AsyncServer {
+	a := &AsyncServer{
 		stopped: make(chan bool),
 	}
-	s.Addr = addr
-	return s
+	a.Addr = addr
+	return a
 }
 
 // Start the server.
-func (s *Server) Start() error {
-	l, err := net.Listen("tcp", s.Addr)
+func (a *AsyncServer) Start() error {
+	l, err := net.Listen("tcp", a.Addr)
 	if err != nil {
 		return err
 	}
-	s.Addr = l.Addr().String()
-	if s.TLSConfig != nil {
-		l = tls.NewListener(l, s.TLSConfig)
+	a.Addr = l.Addr().String()
+	if a.TLSConfig != nil {
+		l = tls.NewListener(l, a.TLSConfig)
 	}
-	s.listener = l
+	a.listener = l
 	go func() {
-		s.Serve(s.listener)
-		s.stopped <- true
+		a.Serve(a.listener)
+		a.stopped <- true
 	}()
 	return nil
 }
 
 // Stop the server. This method blocks until the server is stopped.
-func (s *Server) Stop() {
-	s.listener.Close()
-	<-s.stopped
+func (a *AsyncServer) Stop() {
+	a.listener.Close()
+	<-a.stopped
 }
