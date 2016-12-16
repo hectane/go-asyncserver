@@ -36,7 +36,7 @@ func (a *AsyncServer) Start() error {
 	a.listener = l
 	go func() {
 		a.Serve(a.listener)
-		a.stopped <- true
+		close(a.stopped)
 	}()
 	return nil
 }
